@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikiTerminal", "WikiTerminal\WikiTerminal.csproj", "{EBFF088F-A107-44B5-A934-8AC1501EC99D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WikiWatcher", "WikiWatcher\WikiWatcher.csproj", "{07F7B6ED-3F39-4B46-96CC-41F143FDC10E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBFF088F-A107-44B5-A934-8AC1501EC99D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBFF088F-A107-44B5-A934-8AC1501EC99D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBFF088F-A107-44B5-A934-8AC1501EC99D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBFF088F-A107-44B5-A934-8AC1501EC99D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07F7B6ED-3F39-4B46-96CC-41F143FDC10E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F7B6ED-3F39-4B46-96CC-41F143FDC10E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F7B6ED-3F39-4B46-96CC-41F143FDC10E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F7B6ED-3F39-4B46-96CC-41F143FDC10E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85C60BF3-02D8-4365-87AA-428960D86322}
+	EndGlobalSection
+EndGlobal
