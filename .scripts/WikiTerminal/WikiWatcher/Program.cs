@@ -47,10 +47,12 @@ namespace WikiWatcher
 
             icon = new NotifyIcon()
             {
+                Text = "WikiWatcher",
                 Icon = new System.Drawing.Icon("logo.ico"),
                 ContextMenu = new ContextMenu(new MenuItem[]
                 {
                     new MenuItem("Resolve pending conflicts", ResolveConflicts),
+                    new MenuItem("Scan for changes", ScanPages),
                     new MenuItem("Open log", OpenLog),
                     new MenuItem("Settings", OpenSettings),
                     new MenuItem("Quit", Quit)

@@ -283,12 +283,16 @@ namespace WikiTerminal
                 }
                 File.WriteAllLines(preprocessor_path, new string[]
                 {
+                    "# The function to set up any additional info in pagedata upon creation",
+                    "def setup(pagedata):",
+                    "    return pagedata",
+                    "",
                     "# The function to process content when downloaded from the wiki",
-                    "def to_client(wikitext):",
+                    "def to_client(wikitext, pagedata):",
                     "    return wikitext",
                     "",
                     "# The function to process content before uploading to the wiki",
-                    "def to_wiki(wikitext):",
+                    "def to_wiki(wikitext, pagedata):",
                     "    return wikitext"
                 }, Encoding.UTF8);
                 Console.WriteLine("Opening in Visual Studio Code...");

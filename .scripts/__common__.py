@@ -85,6 +85,18 @@ def import_preprocessor(preprocessor):
     spec.loader.exec_module(module)
     return module
 
+def process_to_client(wikitext, pagedata):
+    if not "preprocessor" in pagedata.keys() or pagedata["preprocessor"] is None:
+        return wikitext
+    module = import_preprocessor(pagedata["preprocessor"])
+    return module.to_client(wikitext, pagedata)
+
+def process_to_wiki(wikitext, pagedata):
+    if not "preprocessor" in pagedata.keys() or pagedata["preprocessor"] is None:
+        return wikitext
+    module = import_preprocessor(pagedata["preprocessor"])
+    return module.to_wiki(wikitext, pagedata)
+
 def get_page(wiki, page):
     parameters = {'action': 'parse', 'page': page, 'prop': 'revid|wikitext', 'formatversion': '2', 'format': 'json'}
     url = f"{api_url(wiki)}?{urllib.parse.urlencode(parameters)}"

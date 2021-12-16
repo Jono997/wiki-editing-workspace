@@ -19,12 +19,7 @@ def edit_page(wiki, page, content, summary=''):
         'summary': summary,
         'token': edit_token
     })
-
-def process_wikitext(wikitext, preprocessor):
-    if preprocessor == None:
-        return wikitext
-    module = import_preprocessor(preprocessor)
-    return module.to_wiki(wikitext)
+    return edit_response
 
 def help():
     print("setpage <filename>")
@@ -36,15 +31,22 @@ def main():
         return
     pdp = pagedata_path(argv[1])
     if not os.path.isfile(pdp):
-        print("Pagedata file: '.scripts/pagedata/" + argv[1] + ".json' could not be found.")
+        print(f"Pagedata file: '.scripts/pagedata/{argv[1]}.json' could not be found.")
         return
     pagedata = read_json(pdp)
-    wikitext = process_wikitext(read_file(page_path(argv[1])), pagedata['preprocessor'])
+    unprocessed_wikitext = read_file(page_path(argv[1])), pagedata
+    wikitext = process_to_wiki(unprocessed_wikitext)
     edit_summary = ""
     if len(argv) > 2:
         edit_summary = argv[2]
-    edit_page(pagedata['wiki'], pagedata['page'], wikitext, edit_summary)
-    print("Success https://" + pagedata['wiki'] + ".fandom.com/wiki/" + pagedata['page'])
+    edit_response = edit_page(pagedata['wiki'], pagedata['page'], wikitext, edit_summary)['edit']
+    if 'nochange' in edit_response.keys():
+        print("No changes have been made since the last get/set")
+    else:
+        pagedata["version"] = edit_response["newrevid"]
+        pagedata["version_hash"] = wikitext_hash(unprocessed_wikitext)
+        write_json(pagedata, pdp)
+        print(f"Success {page_url(pagedata['wiki'], pagedata['page'])}")
 
 if __name__ == "__main__":
     main()

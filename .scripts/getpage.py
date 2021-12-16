@@ -4,12 +4,6 @@ import os
 from urllib.error import HTTPError
 from __common__ import *
 
-def process_wikitext(wikitext, preprocessor):
-    if preprocessor == None:
-        return wikitext
-    module = import_preprocessor(preprocessor)
-    return module.to_client(wikitext)
-
 def help():
     print("getpage get <filename> <wiki> <pagename>: Creates <filename>, containing the contents of <pagename> on wiki and creates a pagedata entry for <pagename>")
     print("getpage setup <filename>: Goes through a step-by-step extended version of 'get' that allows for addional settings to be configured (eg. preprocessors, if the page should be checked, etc.)")
@@ -87,6 +81,8 @@ def main_setup():
             preprocessor = input("Select preprocessor (type 'none' if you don't want any): ")
             if preprocessor in preprocessors:
                 pagedata['preprocessor'] = preprocessor
+                module = import_preprocessor(preprocessor)
+                pagedata = module.setup(pagedata)
                 break
             elif preprocessor.lower() == 'none':
                 pagedata['preprocessor'] = None
@@ -95,20 +91,23 @@ def main_setup():
         pagedata['preprocessor'] = None
     make_path(pagedata_path(argv[2]))
     write_json(pagedata, pagedata_path(argv[2]))
-    write_file(process_wikitext(page_text, pagedata['preprocessor']), page_path(argv[2]))
+    write_file(process_to_client(page_text, pagedata), page_path(argv[2]))
 
 def main_update():
-    file_path = argv[2]
+    file_path = page_path(argv[2])
     if not os.path.isfile(file_path):
-        print("'" + file_path + "' could not be found")
-    pdp = pagedata_path(file_path)
+        print(f"'{argv[2]}' could not be found")
+        return
+    pdp = pagedata_path(argv[2])
     if not os.path.isfile(pdp):
         print("Pagedata file ('.scripts/pagedata/" + file_path + ".json') could not be found")
+        return
     pagedata = read_json(pdp)
     page = get_page(pagedata['wiki'], pagedata['page'])
+    wikitext = process_to_client(page['wikitext'], pagedata)
     pagedata['version'] = page['revid']
-    pagedata['version_hash'] = wikitext_hash(page['wikitext'])
-    write_file(process_wikitext(page['wikitext'], pagedata['preprocessor']), page_path(file_path))
+    pagedata['version_hash'] = wikitext_hash(wikitext)
+    write_file(wikitext, file_path)
     write_json(pagedata, pdp)
     print("Page updated successfully")
 
