@@ -7,10 +7,10 @@ import requests
 import pickle
 
 class MediawikiException(Exception):
-    def __init__(self, errcode, info):
-        message = errcode + "\r\n" + info
+    def __init__(self, err):
+        message = err['code'] + "\r\n" + err['info']
         Exception.__init__(self, message)
-        self.mwerrcode = errcode
+        self.mwerrcode = err['code']
 
 class BadPathException(Exception):
     def __init__(self, path):
@@ -88,14 +88,28 @@ def import_preprocessor(preprocessor):
 def process_to_client(wikitext, pagedata):
     if not "preprocessor" in pagedata.keys() or pagedata["preprocessor"] is None:
         return wikitext
-    module = import_preprocessor(pagedata["preprocessor"])
-    return module.to_client(wikitext, pagedata)
+    if type(pagedata['preprocessor']) is str:
+        module = import_preprocessor(pagedata["preprocessor"])
+        return module.to_client(wikitext, pagedata)
+    else:
+        working = wikitext
+        for i in range(0, len(pagedata['preprocessor'])):
+            module = import_preprocessor(pagedata['preprocessor'][i])
+            working = module.to_client(working, pagedata)
+        return working
 
 def process_to_wiki(wikitext, pagedata):
     if not "preprocessor" in pagedata.keys() or pagedata["preprocessor"] is None:
         return wikitext
-    module = import_preprocessor(pagedata["preprocessor"])
-    return module.to_wiki(wikitext, pagedata)
+    if type(pagedata['preprocessor']) is str:
+        module = import_preprocessor(pagedata["preprocessor"])
+        return module.to_wiki(wikitext, pagedata)
+    else:
+        working = wikitext
+        for i in range(len(pagedata['preprocessor']) - 1, -1, -1):
+            module = import_preprocessor(pagedata['preprocessor'][i])
+            working = module.to_wiki(working, pagedata)
+        return working
 
 def get_page(wiki, page):
     parameters = {'action': 'parse', 'page': page, 'prop': 'revid|wikitext', 'formatversion': '2', 'format': 'json'}
@@ -103,7 +117,7 @@ def get_page(wiki, page):
     response = urllib.request.urlopen(url)
     response = json.loads(response.read())
     if "error" in response.keys():
-        raise MediawikiException(response['error']['code'], response['error']['info'])
+        raise MediawikiException(response['error'])
     return response["parse"]
 
 def req_get(req, url, params):

@@ -7,12 +7,13 @@ using System.IO;
 using System.Diagnostics;
 using ATEM;
 using System.Text.RegularExpressions;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace WikiTerminal
 {
     partial class Program
     {
-        private enum Dir
+        internal enum Dir
         {
             Root,
             Scripts,
@@ -20,12 +21,14 @@ namespace WikiTerminal
             Preprocessors
         }
 
-        private static Dictionary<Dir, string> dirs;
+        internal static Dictionary<Dir, string> dirs;
 
         /// <summary>
         /// The directory that is currently in focus (Environment.CurrentDirectory is not used for this because it's a lot easier to keep that on one specific folder)
         /// </summary>
         private static string currentDir;
+
+        internal static ConsoleState consoleState;
 
         private static Regex commandRegex = new Regex(@"(?:""(.*?)""|([^ ]+))");
 
@@ -53,7 +56,17 @@ namespace WikiTerminal
             #endregion
 
             Console.CancelKeyPress += Console_CancelKeyPress;
-            currentDir = dirs[Dir.Root];
+            string consolestate_path = Path.Combine(dirs[Dir.Scripts], "consolestate.bin");
+            if (File.Exists(consolestate_path))
+            {
+                FileStream file = new FileStream(consolestate_path, FileMode.Open);
+                BinaryFormatter formatter = new BinaryFormatter();
+                consoleState = (ConsoleState)formatter.Deserialize(file);
+                file.Close();
+            }
+            else
+                consoleState = new ConsoleState();
+            currentDir = consoleState.lastCurrentDirectory;
 
             #region Run WikiWatcher
             if (Process.GetProcessesByName("WikiWatcher").Length == 0)
@@ -262,21 +275,13 @@ namespace WikiTerminal
                 ChangeDirectory(dir.Substring(0, dir.Length - Path.GetFileName(dir).Length - 1));
         }
 
-        //private static void DeleteFile(string path)
-        //{
-        //    string pagedata_path = Path.Combine(dirs[Dir.Pagedata], path.Substring(dirs[Dir.Root].Length + 1)) + ".json";
-        //    File.Delete(path);
-        //    if (File.Exists(pagedata_path))
-        //        File.Delete(pagedata_path);
-        //}
-
-        //private static void DeleteDirectory(string path)
-        //{
-        //    string pagedata_path = Path.Combine(dirs[Dir.Pagedata], path.Substring(dirs[Dir.Root].Length + 1));
-        //    Directory.Delete(path, true);
-        //    if (Directory.Exists(pagedata_path))
-        //        Directory.Delete(path, true);
-        //}
+        private static string PythonFriendlyPath(string path)
+        {
+            string p = path;
+            if (!p.Contains(dirs[Dir.Root]))
+                p = Path.GetFullPath(path);
+            return p.Substring(dirs[Dir.Root].Length + 1);
+        }
 
         private static void RunPython(string script, params string[] args)
         {
@@ -301,6 +306,13 @@ namespace WikiTerminal
             };
             proc.Start();
             return proc;
+        }
+
+        private static void SaveConsoleState()
+        {
+            FileStream file = new FileStream(Path.Combine(dirs[Dir.Scripts], "consolestate.bin"), FileMode.Create);
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(file, consoleState);
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)

@@ -34,8 +34,8 @@ def main():
         print(f"Pagedata file: '.scripts/pagedata/{argv[1]}.json' could not be found.")
         return
     pagedata = read_json(pdp)
-    unprocessed_wikitext = read_file(page_path(argv[1])), pagedata
-    wikitext = process_to_wiki(unprocessed_wikitext)
+    unprocessed_wikitext = read_file(page_path(argv[1]))
+    wikitext = process_to_wiki(unprocessed_wikitext, pagedata)
     edit_summary = ""
     if len(argv) > 2:
         edit_summary = argv[2]
@@ -46,7 +46,7 @@ def main():
         pagedata["version"] = edit_response["newrevid"]
         pagedata["version_hash"] = wikitext_hash(unprocessed_wikitext)
         write_json(pagedata, pdp)
-        print(f"Success {page_url(pagedata['wiki'], pagedata['page'])}")
+        print(f"Success {page_url(pagedata['wiki'], pagedata['page']).replace(' ', '_')}")
 
 if __name__ == "__main__":
     main()

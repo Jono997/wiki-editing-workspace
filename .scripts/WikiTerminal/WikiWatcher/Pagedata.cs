@@ -13,6 +13,6 @@ namespace WikiWatcher
         public int version;
         public string version_hash;
         public bool watch;
-        public string preprocessor;
+        public string[] preprocessor;
     }
 }

@@ -32,6 +32,7 @@ namespace WikiTerminal
                 Console.WriteLine("mkpre [preprocessor]\t\t\tCreates the preprocessor provided.");
                 Console.WriteLine("pre [preprocessor]\t\t\tOpens the preprocessor provided is Visual Studio Code.");
                 Console.WriteLine("rmpre [preprocessor]\t\t\tDeletes the preprocessor provided.");
+                Console.WriteLine("tptw [file]\t\tRuns the file provided through its preprocessor's to_wiki function and opens the result in Visual Studio Code.");
                 Console.WriteLine("help\t\t\t\t\tPrints this message");
                 Console.WriteLine("exit\t\t\t\t\tCloses WikiTerminal");
                 return true;
@@ -66,6 +67,8 @@ namespace WikiTerminal
                      currentDir = dirs[Dir.Root];
                  else
                      ChangeDirectory(dir_name);
+                 consoleState.lastCurrentDirectory = currentDir;
+                 SaveConsoleState();
                  return true;
             }),
             new ConsoleCommand("MoveUpDir", new string[] { "cd.." }, delegate()
@@ -195,25 +198,29 @@ namespace WikiTerminal
             }),
             new ConsoleCommand("GetPage", new string[] { "get", "pull" }, delegate(string command, string[] command_split, int[,] command_index)
             {
-                string file_name = PathFromArguments(command, command_split, command_index[1, 0]);
-                if (file_name == null)
-                    return true;
-                if (Directory.Exists(file_name))
-                {
-                    Console.Error.WriteLine($"\"{file_name}\" MUST NOT BE A DIRECTORY");
-                    return true;
+                try {
+                    string file_name = PathFromArguments(command, command_split, command_index[1, 0]);
+                    if (file_name == null)
+                        return true;
+                    if (Directory.Exists(file_name))
+                    {
+                        Console.Error.WriteLine($"\"{file_name}\" MUST NOT BE A DIRECTORY");
+                        return true;
+                    }
+                    string relative_file_name = file_name.Substring(dirs[Dir.Root].Length + 1);
+                    if (File.Exists(file_name))
+                    {
+                        RunPython("getpage.py", "update", relative_file_name);
+                        return true;
+                    }
+                    if (command_split.Length == 2)
+                    {
+                        RunPython("getpage.py", "setup", relative_file_name);
+                        return true;
+                    }
                 }
-                string relative_file_name = file_name.Substring(dirs[Dir.Root].Length + 1);
-                if (File.Exists(file_name))
-                {
-                    RunPython("getpage.py", "update", relative_file_name);
-                    return true;
-                }
-                if (command_split.Length == 2)
-                {
-                    RunPython("getpage.py", "setup", relative_file_name);
-                    return true;
-                }
+                catch (NotSupportedException) { }
+                catch (ArgumentException) { }
                 if (command_split.Length < 4)
                 {
                     Console.Error.WriteLine("INSUFFICIENT NUMBER OF ARGUMENTS");
@@ -258,6 +265,27 @@ namespace WikiTerminal
                 if (file_path == null)
                     return true;
                 RunPython("viewOnWiki.py", file_path.Substring(dirs[Dir.Root].Length + 1));
+                return true;
+            }),
+            new ConsoleCommand("EditPagedata", new string[] { "edit", "editpd", "pdedit" }, delegate(string command, string[] command_split, int[,] command_index)
+            {
+
+                string file_name = Path.GetFullPath(Path.Combine(currentDir, command_split[1]));
+                if (!file_name.Contains(dirs[Dir.Root]))
+                {
+                    Console.Error.WriteLine($"\"{file_name}\" IS OUTSIDE OF THE WORKSPACE");
+                    return true;
+                }
+                if (!File.Exists(file_name))
+                {
+                    Console.Error.WriteLine($"\"{file_name}\" DOESN'T EXIST");
+                    return true;
+                }
+                file_name = file_name.Substring(dirs[Dir.Root].Length + 1);
+                if (command_split.Length == 2)
+                    RunPython("edit_pagedata.py", file_name);
+                else
+                    RunPython("edit_pagedata.py", file_name, command_split[2], command.Substring(command_index[3, 0]));
                 return true;
             }),
             #endregion
@@ -329,6 +357,15 @@ namespace WikiTerminal
                     File.Delete(preprocessor_name);
                 else
                     Console.Error.WriteLine($"\"{preprocessor_name}\" DOESN'T EXIST");
+                return true;
+            }),
+            new ConsoleCommand("TestPreprocessorToWiki", new string[] { "testpretowiki", "tptw" }, delegate(string command, string[] command_split, int[,] command_index)
+            {
+                string file_name = PathFromArguments(command, command_split, command_index[1, 0]);
+                if (file_name == null)
+                    return true;
+                RunPython("test_preprocessor.py", PythonFriendlyPath(file_name));
+                RunCode(Path.Combine(dirs[Dir.Scripts], $"TEST OUTPUT{Path.GetExtension(file_name)}"));
                 return true;
             })
             #endregion

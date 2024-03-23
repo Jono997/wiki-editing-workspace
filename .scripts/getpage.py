@@ -100,7 +100,7 @@ def main_update():
         return
     pdp = pagedata_path(argv[2])
     if not os.path.isfile(pdp):
-        print("Pagedata file ('.scripts/pagedata/" + file_path + ".json') could not be found")
+        print(f"Pagedata file ('.scripts/pagedata/{file_path}.json') could not be found")
         return
     pagedata = read_json(pdp)
     page = get_page(pagedata['wiki'], pagedata['page'])
