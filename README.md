@@ -2,11 +2,12 @@
 A Visual Studio Code workspace made for more easily editing wiki pages
 
 ## How to setup
-Step 1. Install [Python 3](https://www.python.org/downloads). The version I use specifically is 3.10, but the specific version shouldn't matter all that much.
-Step 2. Install [Visual Studio Code](https://code.visualstudio.com)
-Step 3. Install the [Terminals Manager](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-terminals) extension  
-Step 4. Clone this repository and delete the README.md file  
-Step 5. Open up the Command Palette (Ctrl+P) and run the command `>Terminals: Run` (this will have to be repeated the terminal closes for whatever reason)
+Step 1. Install [Python 3](https://www.python.org/downloads). The version I use specifically is 3.10, but the specific version shouldn't matter all that much.  
+Step 2. Install the [Requests](https://pypi.org/project/requests) module. This can be done after installing Python 3 by opening a terminal and running this command: `python -m pip install requests`  
+Step 3. Install [Visual Studio Code](https://code.visualstudio.com)
+Step 4. Install the [Terminals Manager](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-terminals) extension  
+Step 5. Clone this repository and delete the README.md file  
+Step 6. Open up the Command Palette (Ctrl+P) and run the command `>Terminals: Run` (this will have to be repeated the terminal closes for whatever reason)
 
 ## Notes
 This workspace is made specifically for my use case and is here purely in case others may find it interesting or helpful. For this reason, certain functionality some people may want may not be here and possibly never will be. I made and am expanding this tool according to my needs and mine alone, but you are free to try and add functionality of your own.
@@ -25,4 +26,4 @@ This tool also comes with another program called WikiWatcher, which will periodi
 - Added tptw command to preview the wikitext that will get sent to the wiki after running through the preprocessors
 - Added pdedit command to edit pagedata for a page
 - WikiTerminal now remembers the last open directory and will start in that directory when starting
-- Fixed a potential rash with the get command
+- Fixed a potential crash with the get command
