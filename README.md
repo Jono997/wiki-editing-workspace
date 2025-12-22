@@ -19,14 +19,16 @@ This workspace is designed to work on FANDOM wikis specifically and will require
 This tool also comes with another program called WikiWatcher, which will periodically scan the pages you have locally saved for changes and redownload them. There is no way to disable this functionality, though you can close it from the system tray once it starts.
 
 ## Changelog
-1.0: Initial version  
+1.0: Initial version
+
 1.2: Preprocessor update
 - Preprocessor spec now passes pagedata in addition to wikitext to the proprocessor
 - Added support for multiple preprocessors per-page
 - Added tptw command to preview the wikitext that will get sent to the wiki after running through the preprocessors
 - Added pdedit command to edit pagedata for a page
 - WikiTerminal now remembers the last open directory and will start in that directory when starting
-- Fixed a potential crash with the get command  
+- Fixed a potential crash with the get command
+
 1.2.1: luaconsole update
 - Added luaconsole command
 - Fixed an error where only the first directory change per session would be remembered
