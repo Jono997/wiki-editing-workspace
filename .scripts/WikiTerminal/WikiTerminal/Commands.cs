@@ -76,6 +76,7 @@ namespace WikiTerminal
                 string up_dir = Path.GetFullPath(Path.Combine(currentDir, ".."));
                 if (up_dir.Contains(dirs[Dir.Root]))
                     currentDir = up_dir;
+                SaveConsoleState();
                 return true;
             }),
             #endregion

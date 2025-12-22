@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\User\\Documents\\Wiki workspace\\.scripts\\WikiTerminal\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EBFF088F-A107-44B5-A934-8AC1501EC99D}|WikiTerminal\\WikiTerminal.csproj|d:\\user\\documents\\wiki workspace\\.scripts\\wikiterminal\\wikiterminal\\commands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBFF088F-A107-44B5-A934-8AC1501EC99D}|WikiTerminal\\WikiTerminal.csproj|solutionrelative:wikiterminal\\commands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EBFF088F-A107-44B5-A934-8AC1501EC99D}|WikiTerminal\\WikiTerminal.csproj|d:\\user\\documents\\wiki workspace\\.scripts\\wikiterminal\\wikiterminal\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EBFF088F-A107-44B5-A934-8AC1501EC99D}|WikiTerminal\\WikiTerminal.csproj|solutionrelative:wikiterminal\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\User\\Documents\\Wiki workspace\\.scripts\\WikiTerminal\\WikiTerminal\\Program.cs",
+              "RelativeDocumentMoniker": "WikiTerminal\\Program.cs",
+              "ToolTip": "D:\\User\\Documents\\Wiki workspace\\.scripts\\WikiTerminal\\WikiTerminal\\Program.cs",
+              "RelativeToolTip": "WikiTerminal\\Program.cs",
+              "ViewState": "AgIAABMBAAAAAAAAAAAQwDsBAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-22T00:12:33.401Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Commands.cs",
+              "DocumentMoniker": "D:\\User\\Documents\\Wiki workspace\\.scripts\\WikiTerminal\\WikiTerminal\\Commands.cs",
+              "RelativeDocumentMoniker": "WikiTerminal\\Commands.cs",
+              "ToolTip": "D:\\User\\Documents\\Wiki workspace\\.scripts\\WikiTerminal\\WikiTerminal\\Commands.cs",
+              "RelativeToolTip": "WikiTerminal\\Commands.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAQwE4AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-22T00:11:32.584Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

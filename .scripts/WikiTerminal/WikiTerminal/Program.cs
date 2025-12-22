@@ -313,6 +313,7 @@ namespace WikiTerminal
             FileStream file = new FileStream(Path.Combine(dirs[Dir.Scripts], "consolestate.bin"), FileMode.Create);
             BinaryFormatter formatter = new BinaryFormatter();
             formatter.Serialize(file, consoleState);
+            file.Close();
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
