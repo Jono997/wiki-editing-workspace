@@ -28,10 +28,7 @@ namespace WikiTerminal
                 Console.WriteLine("get [file]\t\t\t\tStarts the advanced page download process, with the file provided if it doesn't already exist. Replaces the file provided's contents with the most recent version from the wiki if it does exist.");
                 Console.WriteLine("set [file] <summary>\t\t\tEdits the wiki page the file provided was downloaded from to the contents of that file, with the edit summary provided. If no edit summary is provided, the summary will be blank.");
                 Console.WriteLine("view [file]\t\t\t\tOpens the file provided's origin in a browser.");
-                Console.WriteLine("lspre\t\t\t\t\tLists all the page preprocessors on this machine.");
-                Console.WriteLine("mkpre [preprocessor]\t\t\tCreates the preprocessor provided.");
-                Console.WriteLine("pre [preprocessor]\t\t\tOpens the preprocessor provided is Visual Studio Code.");
-                Console.WriteLine("rmpre [preprocessor]\t\t\tDeletes the preprocessor provided.");
+                Console.WriteLine("luaconsole [file] <command>\t\t\tOpens the file provided in a lua debug console and runs the command provided. If no command is provided, a terminal is openned to run multiple commands");
                 Console.WriteLine("tptw [file]\t\tRuns the file provided through its preprocessor's to_wiki function and opens the result in Visual Studio Code.");
                 Console.WriteLine("help\t\t\t\t\tPrints this message");
                 Console.WriteLine("exit\t\t\t\t\tCloses WikiTerminal");
@@ -266,6 +263,36 @@ namespace WikiTerminal
                 if (file_path == null)
                     return true;
                 RunPython("viewOnWiki.py", file_path.Substring(dirs[Dir.Root].Length + 1));
+                return true;
+            }),
+            new ConsoleCommand("LuaConsole", new string[] { "luaconsole" }, delegate(string command, string[] command_split, int[,] command_index)
+            {
+                if (command_split.Length < 2)
+                {
+                    Console.Error.WriteLine("INSUFFICIENT NUMBER OF ARGUMENTS");
+                    return true;
+                }
+                string file_name = Path.GetFullPath(Path.Combine(currentDir, command_split[1]));
+                if (!file_name.Contains(dirs[Dir.Root]))
+                {
+                    Console.Error.WriteLine($"\"{file_name}\" IS OUTSIDE OF THE WORKSPACE");
+                    return true;
+                }
+                if (!File.Exists(file_name))
+                {
+                    Console.Error.WriteLine($"\"{file_name}\" DOESN'T EXIST");
+                    return true;
+                }
+                file_name = file_name.Substring(dirs[Dir.Root].Length + 1);
+                if (command_split.Length > 2)
+                {
+                    string lua_command = command.Substring(command_index[2, 0]);
+                    if (lua_command[0] == '"' && lua_command.Last() == '"')
+                        lua_command = lua_command.Substring(1, lua_command.Length - 2);
+                    RunPython("luaconsole.py", file_name, lua_command);
+                }
+                else
+                    RunPython("luaconsole.py", file_name);
                 return true;
             }),
             new ConsoleCommand("EditPagedata", new string[] { "edit", "editpd", "pdedit" }, delegate(string command, string[] command_split, int[,] command_index)
