@@ -26,7 +26,7 @@ This tool also comes with another program called WikiWatcher, which will periodi
 - Added tptw command to preview the wikitext that will get sent to the wiki after running through the preprocessors
 - Added pdedit command to edit pagedata for a page
 - WikiTerminal now remembers the last open directory and will start in that directory when starting
-- Fixed a potential crash with the get command
+- Fixed a potential crash with the get command  
 1.2.1: luaconsole update
 - Added luaconsole command
 - Fixed an error where only the first directory change per session would be remembered
